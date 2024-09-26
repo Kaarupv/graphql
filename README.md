@@ -15,7 +15,7 @@ A web application that displays K/J student profile information and visualizes p
 
 -   HTML, CSS, JavaScript
 -   GraphQL
--   Chart.js
+-   Google Charts API
 
 ### File Overview
 
