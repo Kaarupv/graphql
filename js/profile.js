@@ -105,7 +105,6 @@ async function Query(query, token) {
             userName = "Your";
         }
 
-        // Update the heading with the user's name
         document.getElementById(
             "profile-heading"
         ).textContent = `${userName}'s Profile`;
@@ -127,7 +126,7 @@ async function Query(query, token) {
         xpArr.push({
             xp: 0,
             day: data.event[0].createdAt,
-            event: "Beginning of the school",
+            event: "Start of school",
         });
         usr.transactions.forEach((trans) => {
             cumulativeXP += trans.amount;
@@ -138,103 +137,84 @@ async function Query(query, token) {
             });
         });
 
-        const xpLabels = xpArr.map((entry) =>
-            new Date(entry.day).toLocaleDateString()
-        );
-        const xpData = xpArr.map((entry) => entry.xp);
+        const xpData = xpArr.map((entry) => [
+            new Date(entry.day),
+            entry.xp,
+            `XP: ${entry.xp}, Project: ${entry.event}`,
+        ]);
 
-        const xpCtx = document.getElementById("xpChart").getContext("2d");
-        new Chart(xpCtx, {
-            type: "line",
-            data: {
-                labels: xpLabels,
-                datasets: [
-                    {
-                        label: "Cumulative XP Over Time",
-                        data: xpData,
-                        borderColor: "blue",
-                        backgroundColor: "lightblue",
-                        fill: true,
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: "Date",
-                        },
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: "Cumulative XP",
-                        },
-                    },
-                },
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const index = context.dataIndex;
-                                const eventName = xpArr[index].event;
-                                return `XP: ${context.formattedValue}, Event: ${eventName}`;
-                            },
-                        },
-                    },
-                },
-            },
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(() => {
+            drawLineChart(xpData);
+            drawPieChart([
+                ["Audits Given", data.upTransactions.aggregate.count],
+                ["Audits Received", data.downTransactions.aggregate.count],
+            ]);
         });
 
-        const pieData = [
-            {
-                label: "Audits Given",
-                value: data.upTransactions.aggregate.count,
-                color: "purple",
-            },
-            {
-                label: "Audits Received",
-                value: data.downTransactions.aggregate.count,
-                color: "#2d2c2e",
-            },
-        ];
-        const pieLabels = pieData.map((item) => item.label);
-        const pieValues = pieData.map((item) => item.value);
-        const pieColors = pieData.map((item) => item.color);
+        function drawLineChart(xpData) {
+            const dataTable = new google.visualization.DataTable();
+            dataTable.addColumn("date", "Date");
+            dataTable.addColumn("number", "XP");
+            dataTable.addColumn({ type: "string", role: "tooltip" }); // Custom tooltip column
+            dataTable.addRows(xpData);
 
-        const auditCtx = document.getElementById("auditChart").getContext("2d");
-        new Chart(auditCtx, {
-            type: "pie",
-            data: {
-                labels: pieLabels,
-                datasets: [
-                    {
-                        data: pieValues,
-                        backgroundColor: pieColors,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Audits Given vs. Received",
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const label = context.label || "";
-                                const value = context.formattedValue;
-                                return `${label}: ${value}`;
-                            },
-                        },
+            const options = {
+                title: "Cumulative XP Over Time",
+                hAxis: {
+                    title: "Date",
+                    textStyle: { color: "#ffffff" },
+                    gridlines: { color: "#3a3a3a" },
+                },
+                vAxis: {
+                    title: "Cumulative XP",
+                    textStyle: { color: "#ffffff" },
+                    gridlines: { color: "#3a3a3a" },
+                },
+                backgroundColor: "#1e1e1e",
+                titleTextStyle: { color: "#ffffff" },
+                legend: { position: "none" },
+                curveType: "function",
+                series: {
+                    0: {
+                        color: "#4CAF50",
+                        pointShape: "circle",
+                        pointSize: 5,
                     },
                 },
-            },
-        });
+                tooltip: { isHtml: true },
+            };
+
+            const chart = new google.visualization.LineChart(
+                document.getElementById("xpChart")
+            );
+            chart.draw(dataTable, options);
+        }
+
+        function drawPieChart(pieData) {
+            const dataTable = new google.visualization.DataTable();
+            dataTable.addColumn("string", "Audit Type");
+            dataTable.addColumn("number", "Count");
+            dataTable.addRows(pieData);
+
+            const options = {
+                backgroundColor: "#1e1e1e",
+                titleTextStyle: { color: "#ffffff" },
+                legend: { textStyle: { color: "#ffffff" } },
+                pieSliceTextStyle: { color: "#ffffff" },
+                slices: {
+                    0: { color: "#4CAF50" },
+                    1: { color: "#FFC107" },
+                },
+                pieHole: 0.4,
+                is3D: true,
+            };
+
+            const chart = new google.visualization.PieChart(
+                document.getElementById("auditChart")
+            );
+            chart.draw(dataTable, options);
+        }
     } catch (error) {
         console.error("Error fetching user data:", error);
         alert(

@@ -140,39 +140,32 @@ form input::placeholder {
 /* ===========================
    Charts Section Styles
    =========================== */
-.charts-row {
+#charts {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start;
-    margin-bottom: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .chart-container {
-    position: relative;
-    width: 45%;
-    max-width: 500px;
-    margin: 10px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background-color: #1e1e1e;
     padding: 20px;
     border-radius: 10px;
     box-sizing: border-box;
+    width: auto;
 }
 
 .chart-container h3 {
     text-align: center;
     margin-bottom: 10px;
     color: #ffffff;
-}
-
-.chart-container canvas {
-    width: 100% !important;
-    height: auto !important;
-}
-
-#xpChart,
-#auditChart {
-    height: auto !important;
 }
 
 /* ===========================
@@ -197,7 +190,7 @@ form input::placeholder {
 /* ===========================
    Media Queries
    =========================== */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     #stats-container {
         flex-direction: column;
         gap: 10px;

@@ -4,7 +4,10 @@
         <meta charset="UTF-8" />
         <title>K/J Profile</title>
         <link rel="stylesheet" href="css/styles.css" />
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script
+            type="text/javascript"
+            src="https://www.gstatic.com/charts/loader.js"
+        ></script>
     </head>
     <body>
         <button id="logout-button">Logout</button>
@@ -17,20 +20,17 @@
             <p>Audit Ratio: <span id="ratioText"></span></p>
         </div>
 
-        <div id="charts" class="container">
-            <div class="charts-row">
-                <div class="chart-container">
-                    <h3>Progress Over Time</h3>
-                    <canvas id="xpChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Audit Statistics</h3>
-                    <canvas id="auditChart"></canvas>
-                </div>
+        <div id="charts">
+            <div class="chart-container">
+                <h3>Progress Over Time</h3>
+                <div id="xpChart" style="width: 1200px; height: 500px"></div>
+            </div>
+            <div class="chart-container">
+                <h3>Audit Given vs Recived</h3>
+                <div id="auditChart" style="width: 600px; height: 500px"></div>
             </div>
         </div>
 
         <script src="js/profile.js"></script>
-        <script src="js/queries.js"></script>
     </body>
 </html>
