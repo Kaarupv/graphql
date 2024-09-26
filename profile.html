@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>K/J Profile</title>
+        <link rel="stylesheet" href="css/styles.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <button id="logout-button">Logout</button>
+        <h1 id="profile-heading">Your Profile</h1>
+
+        <div id="profile-info"></div>
+
+        <div id="stats-container">
+            <p>Total XP: <span id="xpText"></span></p>
+            <p>Audit Ratio: <span id="ratioText"></span></p>
+        </div>
+
+        <div id="charts" class="container">
+            <div class="charts-row">
+                <div class="chart-container">
+                    <h3>Progress Over Time</h3>
+                    <canvas id="xpChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Audit Statistics</h3>
+                    <canvas id="auditChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/profile.js"></script>
+        <script src="js/queries.js"></script>
+    </body>
+</html>
